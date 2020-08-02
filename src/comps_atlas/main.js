@@ -1,11 +1,18 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import MapApp from "./maps";
 function Main(props) {
+  let history = useHistory();
   let item = props.item;
   let borders = item.borders;
   let allstate = props.bigarr;
-
+  useEffect(() => {
+    let st = props.location.pathname.slice(1);
+    if (props.first) {
+      history.push("/");
+      props.setfirst(false);
+    }
+  }, [])
   allstate = allstate.filter((item) => {
     return borders.indexOf(item.alpha3Code) > -1;
   });
@@ -31,14 +38,14 @@ function Main(props) {
           <div className="row">
             {allstate.map((item, i) => {
               return (
-                <Link className="btn btn-link m-1" key={i}  onClick={() => {props.setname(item.name)}} to={"/"+item.name}>
+                <Link className="btn btn-link m-1" key={i} onClick={() => { props.setname(item.name) }} to={"/" + item.name}>
                   {item.name}
                 </Link>
               );
             })}
           </div>
         </div>
-            <MapApp lat={item.latlng[0]} leng={item.latlng[1]}/>
+        <MapApp lat={item.latlng[0]} leng={item.latlng[1]} />
       </div>
     </div>
   );

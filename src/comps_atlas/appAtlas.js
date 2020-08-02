@@ -2,48 +2,49 @@ import React, { useState, useEffect } from 'react';
 import Header from './header';
 import Nav from './nav';
 import Main from './main';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect, Link } from "react-router-dom";
 import { doApiGet } from '../services/apiService';
 
-function AppAtlas(props){
-  let name1=" ";
-  let [arr,setArr]=useState([]);
-  let [bigarr,setbigarr]=useState([]);
-  let [name,setname]=useState("israel");
-  useEffect(()=>{
-    let url="https://restcountries.eu/rest/v2/all"
+function AppAtlas(props) {
+  let [first, setfirst] = useState(true);
+  let [arr, setArr] = useState([]);
+  let [bigarr, setbigarr] = useState([]);
+  let [name, setname] = useState("israel");
+  useEffect(() => {
+    let url = "https://restcountries.eu/rest/v2/all"
     doApiGet(url)
-    .then(data=>{
-     setbigarr(data)
-    })
-  },[])
+      .then(data => {
+        setbigarr(data)
+      })
+  }, [])
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setname(name);
-    let url="https://restcountries.eu/rest/v2/name/"+name+"?fullText=true";
-    localStorage.setItem('name', name);
-    console.log(localStorage.getItem("name")); 
+    let url = "https://restcountries.eu/rest/v2/name/" + name + "?fullText=true";
     doApiGet(url)
-    .then(data=>{
-      setArr(data);
-    })
-  },[name])
+      .then(data => {
+        setArr(data);
+      })
+  }, [name])
 
-  return(
-    <div >  
+  return (
+    <div >
       <Router>
-                <Header />
-                <Nav setname={setname} bigarr={bigarr} />
-                {arr.map(item =>
-                {
-                    return(
-                        <Main setname={setname} item={item} bigarr={bigarr} key={item.callingCodes[0]}/>
-                    )
-            })} 
-            </Router>
-              
-    </div> 
+        <Header />
+        <Nav setname={setname} bigarr={bigarr} />
+        <Switch>
+          <Route exact path={name} />
+          {arr.map(item => {
+            return (
+              <Main setname={setname} first={first} setfirst={setfirst} item={item} bigarr={bigarr} key={item.callingCodes[0]} />
+            )
+          })}
+
+        </Switch>
+      </Router>
+
+    </div>
   )
 }
 
