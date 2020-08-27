@@ -1,0 +1,11 @@
+nav{
+    min-height: 60px;
+}
+main{
+    min-height: 95vh;
+}
+nav a{
+    min-width: 100px;
+    color: white !important;
+}
+
